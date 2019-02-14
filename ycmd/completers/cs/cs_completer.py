@@ -568,7 +568,7 @@ class CsharpSolutionCompleter( object ):
     target = urljoin( self._ServerLocation(), handler )
     response = urllib3.PoolManager().request( 'POST',
                                               target,
-                                              data = parameters,
+                                              fields = parameters,
                                               timeout = timeout )
     return response.json()
 
