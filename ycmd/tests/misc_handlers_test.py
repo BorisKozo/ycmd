@@ -25,7 +25,6 @@ from builtins import *  # noqa
 
 from hamcrest import ( any_of, assert_that, contains, empty, equal_to,
                        has_entries, instance_of )
-import requests
 
 from ycmd.tests import IsolatedYcmd, PathToTestFile, SharedYcmd
 from ycmd.tests.test_utils import BuildRequest, DummyCompleter, PatchCompleter
@@ -84,7 +83,7 @@ def MiscHandlers_EventNotification_ReturnJsonOnBigFileError_test( app ):
                             event_data,
                             expect_errors = True )
   assert_that( response.status_code,
-               equal_to( requests.codes.request_entity_too_large ) )
+               equal_to( 413 ) )
   assert_that( response.json,
                has_entries( { 'traceback': None,
                               'message': 'None',

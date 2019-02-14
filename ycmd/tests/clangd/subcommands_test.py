@@ -27,7 +27,6 @@ from hamcrest import ( assert_that, calling, contains, contains_string,
 from nose.tools import eq_
 from pprint import pprint
 from webtest import AppError
-import requests
 import os.path
 
 from ycmd.tests.clangd import ( IsolatedYcmd,
@@ -54,7 +53,7 @@ def Subcommands_DefinedSubcommands_test( app ):
         'filepath': file_path
       },
       'expect': {
-        'response': requests.codes.ok,
+        'response': 200,
         'data': contains( *sorted( [ 'FixIt',
                                      'Format',
                                      'GetType',
@@ -84,7 +83,7 @@ def Subcommands_GoTo_ZeroBasedLineAndColumn_test( app ):
           'filepath': file_path
       },
       'expect': {
-          'response': requests.codes.ok,
+          'response': 200,
           'data': {
               'filepath': os.path.abspath( file_path ),
               'line_num': 2,
@@ -749,7 +748,7 @@ def Subcommands_RefactorRename_test( app ):
       'column_num': 4,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'fixits': contains( has_entries( {
           'chunks': contains(

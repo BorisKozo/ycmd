@@ -25,7 +25,7 @@ from builtins import *  # noqa
 from collections import defaultdict
 from future.utils import itervalues
 import os
-import requests
+import urllib3
 import threading
 
 from ycmd.completers.completer import Completer
@@ -566,7 +566,10 @@ class CsharpSolutionCompleter( object ):
   def _GetResponse( self, handler, parameters = {}, timeout = None ):
     """ Handle communication with server """
     target = urljoin( self._ServerLocation(), handler )
-    response = requests.post( target, data = parameters, timeout = timeout )
+    response = urllib3.PoolManager().request( 'POST',
+                                              target,
+                                              data = parameters,
+                                              timeout = timeout )
     return response.json()
 
 

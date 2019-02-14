@@ -31,7 +31,6 @@ from mock import patch
 from nose.tools import eq_
 from pprint import pprint
 from webtest import AppError
-import requests
 import os.path
 
 from ycmd import handlers
@@ -1228,7 +1227,7 @@ def Subcommands_GetDoc_Undocumented_test( app ):
                             event_data,
                             expect_errors = True )
 
-  eq_( response.status_code, requests.codes.internal_server_error )
+  eq_( response.status_code, 500 )
 
   assert_that( response.json,
                ErrorMatcher( ValueError, NO_DOCUMENTATION_MESSAGE ) )
@@ -1251,7 +1250,7 @@ def Subcommands_GetDoc_NoCursor_test( app ):
                             event_data,
                             expect_errors = True )
 
-  eq_( response.status_code, requests.codes.internal_server_error )
+  eq_( response.status_code, 500 )
 
   assert_that( response.json,
                ErrorMatcher( ValueError, NO_DOCUMENTATION_MESSAGE ) )
@@ -1429,7 +1428,7 @@ def Subcommands_GetDocImprecise_Undocumented_test( app ):
                             event_data,
                             expect_errors = True )
 
-  eq_( response.status_code, requests.codes.internal_server_error )
+  eq_( response.status_code, 500 )
 
   assert_that( response.json,
                ErrorMatcher( ValueError, NO_DOCUMENTATION_MESSAGE ) )
@@ -1461,7 +1460,7 @@ def Subcommands_GetDocImprecise_NoCursor_test( app ):
                             event_data,
                             expect_errors = True )
 
-  eq_( response.status_code, requests.codes.internal_server_error )
+  eq_( response.status_code, 500 )
 
   assert_that( response.json,
                ErrorMatcher( ValueError, NO_DOCUMENTATION_MESSAGE ) )
@@ -1598,7 +1597,7 @@ def Subcommands_StillParsingError( app, command ):
                             data,
                             expect_errors = True )
 
-  eq_( response.status_code, requests.codes.internal_server_error )
+  eq_( response.status_code, 500 )
 
   pprint( response.json )
 

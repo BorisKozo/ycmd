@@ -256,5 +256,5 @@ def ClangdCompleter_StartServer_Fails_test( app ):
                        filepath = PathToTestFile( 'foo.cc' ),
                        contents = ""
                      ) )
-      eq_( resp.status_code, 200 )
+      eq_( resp.status, 200 )
       shutdown.assert_called()

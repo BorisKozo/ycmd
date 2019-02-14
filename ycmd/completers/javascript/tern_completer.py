@@ -25,7 +25,7 @@ from builtins import *  # noqa
 from future.utils import iterkeys
 import logging
 import os
-import requests
+import urllib3
 import threading
 
 from subprocess import PIPE
@@ -294,9 +294,9 @@ class TernCompleter( Completer ):
 
     try:
       target = self._GetServerAddress() + '/ping'
-      response = requests.get( target )
-      return response.status_code == requests.codes.ok
-    except requests.ConnectionError:
+      response = urllib3.PoolManager().request( 'GET', target )
+      return response.status_code == 200
+    except urllib3.exceptions.ConnectionError:
       return False
 
 
@@ -329,10 +329,11 @@ class TernCompleter( Completer ):
     }
     full_request.update( request )
 
-    response = requests.post( self._GetServerAddress(),
-                              json = full_request )
+    response = urllib3.PoolManager().request( 'POST',
+                                              self._GetServerAddress(),
+                                              json = full_request )
 
-    if response.status_code != requests.codes.ok:
+    if response.status_code != 200:
       raise RuntimeError( response.text )
 
     return response.json()

@@ -35,7 +35,6 @@ from hamcrest import ( assert_that,
 from nose.tools import eq_
 from webtest import AppError
 import pprint
-import requests
 
 from ycmd.tests.typescript import IsolatedYcmd, PathToTestFile, SharedYcmd
 from ycmd.tests.test_utils import ( BuildRequest,
@@ -85,7 +84,7 @@ def GetCompletions_Basic_test( app ):
       'filepath': PathToTestFile( 'test.ts' )
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': contains_inanyorder(
           CompletionEntryMatcher(
@@ -129,7 +128,7 @@ def GetCompletions_Basic_test( app ):
       'filepath': PathToTestFile( 'test.ts' )
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': contains_inanyorder(
           CompletionEntryMatcher(
@@ -157,7 +156,7 @@ def GetCompletions_Keyword_test( app ):
       'filepath': PathToTestFile( 'test.ts' ),
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': has_item( {
           'insertion_text': 'class',
@@ -263,7 +262,7 @@ def GetCompletions_AutoImport_test( app ):
       'filepath': filepath,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': has_item( has_entries( {
           'insertion_text':  'Bår',

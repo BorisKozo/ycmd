@@ -35,7 +35,6 @@ from hamcrest import ( all_of,
                        has_entry,
                        has_entries,
                        is_not )
-import requests
 
 from ycmd.utils import ReadFile
 from ycmd.tests.python import IsolatedYcmd, PathToTestFile, SharedYcmd
@@ -174,7 +173,7 @@ def GetCompletions_NoSuggestions_Fallback_test( app ):
       'force_semantic': False,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': contains(
           CompletionEntryMatcher( 'a_parameter', '[ID]' ),
@@ -197,7 +196,7 @@ def GetCompletions_Unicode_InLine_test( app ):
       'column_num': 14
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': contains(
           CompletionEntryMatcher( 'center', 'def center(width, fillchar)' )
@@ -220,7 +219,7 @@ def GetCompletions_SysPath_EmptyExtraConf_test( app ):
       'column_num': 8
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': empty(),
         'errors': empty()
@@ -242,7 +241,7 @@ def GetCompletions_SysPath_SettingsFunctionInExtraConf_test( app ):
       'column_num': 8
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': has_item(
           CompletionEntryMatcher( 'SOME_CONSTANT', 'SOME_CONSTANT = 1' )
@@ -266,7 +265,7 @@ def GetCompletions_SysPath_SettingsEmptyInExtraConf_test( app ):
       'column_num': 8
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': empty(),
         'errors': empty()
@@ -287,7 +286,7 @@ def GetCompletions_SysPath_SettingsNoneInExtraConf_test( app ):
       'column_num': 8
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': empty(),
         'errors': empty()
@@ -309,7 +308,7 @@ def GetCompletions_SysPath_PythonSysPathInExtraConf_test( app ):
       'column_num': 8
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': has_item(
           CompletionEntryMatcher( 'SOME_CONSTANT', 'SOME_CONSTANT = 1' )
@@ -333,7 +332,7 @@ def GetCompletions_PythonInterpreter_InvalidPythonInExtraConf_test( app ):
       'column_num': 8
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': empty(),
         'errors': contains(

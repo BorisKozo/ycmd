@@ -30,7 +30,7 @@ import functools
 import json
 import os
 import psutil
-import requests
+import urllib3
 import subprocess
 import sys
 import time
@@ -142,7 +142,7 @@ class Client_test( object ):
 
         if self._IsReady( filetype ):
           return
-      except requests.exceptions.ConnectionError:
+      except urllib3.exceptions.ConnectionError:
         pass
       finally:
         time.sleep( 0.1 )
@@ -212,11 +212,11 @@ class Client_test( object ):
     headers = self._ExtraHeaders( method,
                                   request_uri,
                                   data )
-    response = requests.request( method,
-                                 request_uri,
-                                 headers = headers,
-                                 data = data,
-                                 params = params )
+    response = urllib3.PoolManager().request( method,
+                                              request_uri,
+                                              headers = headers,
+                                              data = data,
+                                              params = params )
     return response
 
 
@@ -237,7 +237,7 @@ class Client_test( object ):
 
 
   def AssertResponse( self, response ):
-    assert_that( response.status_code, equal_to( requests.codes.ok ) )
+    assert_that( response.status_code, equal_to( 200 ) )
     assert_that( HMAC_HEADER, is_in( response.headers ) )
     assert_that(
       self._ContentHmacValid( response ),

@@ -25,7 +25,7 @@ from builtins import *  # noqa
 from hamcrest import assert_that, equal_to
 from threading import Event
 import time
-import requests
+import urllib3
 
 from ycmd.tests.client_test import Client_test
 from ycmd.utils import StartThread
@@ -91,7 +91,7 @@ class Shutdown_test( Client_test ):
       while not all_servers_are_running.is_set():
         try:
           self.GetRequest( 'ready' )
-        except requests.exceptions.ConnectionError:
+        except urllib3.exceptions.ConnectionError:
           pass
         finally:
           time.sleep( 0.1 )

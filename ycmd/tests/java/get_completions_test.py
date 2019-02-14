@@ -34,7 +34,6 @@ from hamcrest import ( assert_that,
 from nose.tools import eq_
 
 from pprint import pformat
-import requests
 
 from ycmd import handlers
 from ycmd.tests.java import DEFAULT_PROJECT_DIR, PathToTestFile, SharedYcmd
@@ -137,7 +136,7 @@ def GetCompletions_NoQuery_test( app ):
       'column_num': 12,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': contains_inanyorder(
           *WithObjectMethods(
@@ -166,7 +165,7 @@ def GetCompletions_WithQuery_test( app ):
       'column_num': 15,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': contains_inanyorder(
             CompletionEntryMatcher( 'test', 'TestFactory.Bar', {
@@ -194,7 +193,7 @@ def GetCompletions_DetailFromCache_test( app ):
         'column_num': 12,
       },
       'expect': {
-        'response': requests.codes.ok,
+        'response': 200,
         'data': has_entries( {
           'completion_start_column': 11,
           'completions': has_item(
@@ -222,7 +221,7 @@ def GetCompletions_Package_test( app ):
       'column_num': 18,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completion_start_column': 9,
         'completions': contains(
@@ -247,7 +246,7 @@ def GetCompletions_Import_Class_test( app ):
       'column_num': 34,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completion_start_column': 34,
         'completions': contains(
@@ -274,7 +273,7 @@ def GetCompletions_Import_Classes_test( app ):
       'column_num': 52,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completion_start_column': 52,
         'completions': contains(
@@ -313,7 +312,7 @@ def GetCompletions_Import_ModuleAndClass_test( app ):
       'column_num': 26,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completion_start_column': 26,
         'completions': contains(
@@ -344,7 +343,7 @@ def GetCompletions_WithFixIt_test( app ):
       'column_num': 25,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completion_start_column': 22,
         'completions': contains_inanyorder(
@@ -403,7 +402,7 @@ def GetCompletions_RejectMultiLineInsertion_test( app ):
       'force_semantic': True
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completion_start_column': 16,
         'completions': contains(
@@ -438,7 +437,7 @@ def GetCompletions_UnicodeIdentifier_test( app ):
       'force_semantic': True
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completion_start_column': 35,
         'completions': contains_inanyorder( *WithObjectMethods(
@@ -486,7 +485,7 @@ def GetCompletions_ResolveFailed_test( app ):
         'force_semantic': True
       },
       'expect': {
-        'response': requests.codes.ok,
+        'response': 200,
         'data': has_entries( {
           'completion_start_column': 35,
           'completions': contains_inanyorder( *WithObjectMethods(
@@ -529,7 +528,7 @@ def Subcommands_ServerNotReady_test( app ):
         'force_semantic': True
       },
       'expect': {
-        'response': requests.codes.ok,
+        'response': 200,
         'data': has_entries( {
           'errors': empty(),
           'completions': empty(),
@@ -551,7 +550,7 @@ def GetCompletions_MoreThan100FilteredResolve_test( app ):
       'column_num': 15,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': has_item(
           CompletionEntryMatcher( 'com.youcompleteme.*;', None, {
@@ -578,7 +577,7 @@ def GetCompletions_MoreThan100ForceSemantic_test( app ):
       'force_semantic': True
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': contains(
           CompletionEntryMatcher( 'com.youcompleteme.*;', None, {
@@ -609,7 +608,7 @@ def GetCompletions_ForceAtTopLevel_NoImport_test( app ):
       'force_semantic': True,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': contains(
           CompletionEntryMatcher( 'TestFactory', None, {
@@ -636,7 +635,7 @@ def GetCompletions_NoForceAtTopLevel_NoImport_test( app ):
       'force_semantic': False,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': contains(
           CompletionEntryMatcher( 'TestFactory', '[ID]', {} ),
@@ -661,7 +660,7 @@ def GetCompletions_ForceAtTopLevel_WithImport_test( app ):
       'force_semantic': True,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': has_item(
           CompletionEntryMatcher( 'InputStreamReader', None, {
@@ -708,7 +707,7 @@ def GetCompletions_UseServerTriggers_test( app ):
       'force_semantic': False,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completion_start_column': 4,
         'completions': has_item(

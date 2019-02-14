@@ -25,7 +25,6 @@ from __future__ import division
 from builtins import *  # noqa
 
 import json
-import requests
 from nose.tools import eq_
 from hamcrest import ( assert_that, contains, contains_inanyorder, empty,
                        has_item, has_items, has_entries )
@@ -63,7 +62,7 @@ def RunTest( app, test ):
   test is a dictionary containing:
     'request': kwargs for BuildRequest
     'expect': {
-       'response': server response code (e.g. requests.codes.ok)
+       'response': server response code (e.g. 200)
        'data': matcher for the server response json
     }
   """
@@ -113,7 +112,7 @@ def GetCompletions_ForcedWithNoTrigger_NoYcmdCaching_test( app ):
       'force_semantic': True,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': contains(
           CompletionEntryMatcher( 'DO_SOMETHING_TO', 'void' ),
@@ -139,7 +138,7 @@ def GetCompletions_NotForced_NoYcmdCaching_test( app ):
       'force_semantic': False,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': contains(
           CompletionEntryMatcher( 'DO_SOMETHING_TO', 'void' ),
@@ -166,7 +165,7 @@ def GetCompletions_ForcedWithNoTrigger_test( app ):
       'force_semantic': True,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': contains(
           CompletionEntryMatcher( 'DO_SOMETHING_TO', 'void' ),
@@ -193,7 +192,7 @@ def GetCompletions_Fallback_NoSuggestions_test( app ):
       'force_semantic': False,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': empty(),
         'errors': empty(),
@@ -217,7 +216,7 @@ def GetCompletions_Fallback_NoSuggestions_MinimumCharaceters_test( app ):
       'force_semantic': False,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': empty(),
         'errors': empty(),
@@ -239,7 +238,7 @@ def GetCompletions_Fallback_Suggestions_test( app ):
       'force_semantic': False,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': has_item( CompletionEntryMatcher( 'a_parameter',
                                                          '[ID]' ) ),
@@ -263,7 +262,7 @@ def GetCompletions_Fallback_Exception_test( app ):
       'force_semantic': False,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': contains(
           CompletionEntryMatcher( 'a_parameter', 'int' ),
@@ -288,7 +287,7 @@ def GetCompletions_Forced_NoFallback_test( app ):
       'force_semantic': True,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( { 'completions': empty() } ),
     },
   } )
@@ -312,7 +311,7 @@ def GetCompletions_FilteredNoResults_Fallback_test( app ):
       'force_semantic': False,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': contains_inanyorder(
           # do_ is an identifier because it is already in the file when we
@@ -411,7 +410,7 @@ def GetCompletions_ClangCLDriverFlag_SimpleCompletion_test( app ):
       'force_semantic': True,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completion_start_column': 3,
         'completions': contains_inanyorder(
@@ -439,7 +438,7 @@ def GetCompletions_ClangCLDriverExec_SimpleCompletion_test( app ):
       'force_semantic': True,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completion_start_column': 3,
         'completions': contains_inanyorder(
@@ -467,7 +466,7 @@ def GetCompletions_ClangCLDriverFlag_IncludeStatementCandidate_test( app ):
       'column_num': 34,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completion_start_column': 11,
         'completions': contains_inanyorder(
@@ -494,7 +493,7 @@ def GetCompletions_ClangCLDriverExec_IncludeStatementCandidate_test( app ):
       'column_num': 34,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completion_start_column': 11,
         'completions': contains_inanyorder(
@@ -517,7 +516,7 @@ def GetCompletions_UnicodeInLine_test( app ):
       'column_num': 8,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completion_start_column': 8,
         'completions': contains(
@@ -540,7 +539,7 @@ def GetCompletions_UnicodeInLineFilter_test( app ):
       'column_num': 10,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completion_start_column': 8,
         'completions': contains_inanyorder(
@@ -564,7 +563,7 @@ def GetCompletions_QuotedInclude_test( app ):
       'column_num': 11,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completion_start_column': 11,
         'completions': contains(
@@ -593,7 +592,7 @@ def GetCompletions_QuotedInclude_AfterDirectorySeparator_test( app ):
       'column_num': 27,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completion_start_column': 27,
         'completions': contains(
@@ -618,7 +617,7 @@ def GetCompletions_QuotedInclude_AfterDot_test( app ):
       'compilation_flags': [ '-x', 'cpp' ]
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completion_start_column': 27,
         'completions': contains(
@@ -642,7 +641,7 @@ def GetCompletions_QuotedInclude_AfterSpace_test( app ):
       'column_num': 20,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completion_start_column': 11,
         'completions': contains(
@@ -666,7 +665,7 @@ def GetCompletions_QuotedInclude_Invalid_test( app ):
       'column_num': 12,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completion_start_column': 12,
         'completions': empty(),
@@ -688,7 +687,7 @@ def GetCompletions_BracketInclude_test( app ):
       'column_num': 11,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completion_start_column': 11,
         'completions': has_items(
@@ -717,7 +716,7 @@ def GetCompletions_BracketInclude_AtDirectorySeparator_test( app ):
       'force_semantic': True
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completion_start_column': 18,
         'completions': empty(),
@@ -739,7 +738,7 @@ def GetCompletions_cuda_test( app ):
       'force_semantic': True,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completion_start_column': 29,
         'completions': contains(
@@ -764,7 +763,7 @@ def GetCompletions_WithHeaderInsertionDecorators_test( app ):
       'force_semantic': True,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completion_start_column': 29,
         'completions': contains(
@@ -788,7 +787,7 @@ def GetCompletions_ServerTriggers_Ignored_test( app ):
       'column_num': 25
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completion_start_column': 25,
         'completions': empty(),

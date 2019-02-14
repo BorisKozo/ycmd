@@ -30,7 +30,6 @@ from hamcrest import ( assert_that,
                        has_entries,
                        matches_regexp )
 from nose.tools import eq_
-import requests
 import pprint
 
 from ycmd.tests.javascript import PathToTestFile, SharedYcmd
@@ -122,7 +121,7 @@ def Subcommands_Format_WholeFile_Spaces_test( app ):
       }
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'fixits': contains( has_entries( {
           'chunks': contains(
@@ -193,7 +192,7 @@ def Subcommands_Format_WholeFile_Tabs_test( app ):
       }
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'fixits': contains( has_entries( {
           'chunks': contains(
@@ -274,7 +273,7 @@ def Subcommands_Format_Range_Spaces_test( app ):
       }
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'fixits': contains( has_entries( {
           'chunks': contains(
@@ -322,7 +321,7 @@ def Subcommands_Format_Range_Tabs_test( app ):
       }
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'fixits': contains( has_entries( {
           'chunks': contains(
@@ -356,7 +355,7 @@ def Subcommands_GetType_test( app ):
       'filepath': PathToTestFile( 'test.js' ),
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': MessageMatcher( 'var foo: Foo' )
     }
   } )
@@ -373,7 +372,7 @@ def Subcommands_GetDoc_Method_test( app ):
       'filepath': PathToTestFile( 'test.js' ),
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
          'detailed_info': '(method) Bar.testMethod(): void\n\n'
                           'Method documentation'
@@ -393,7 +392,7 @@ def Subcommands_GetDoc_Class_test( app ):
       'filepath': PathToTestFile( 'test.js' ),
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
          'detailed_info': 'class Bar\n\n'
                           'Class documentation\n\n'
@@ -414,7 +413,7 @@ def Subcommands_GoToReferences_test( app ):
       'filepath': PathToTestFile( 'test.js' ),
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': contains_inanyorder(
         has_entries( { 'description': 'var bar = new Bar();',
                        'line_num'   : 30,
@@ -452,7 +451,7 @@ def Subcommands_GoTo( app, goto_command ):
       'filepath': PathToTestFile( 'test.js' ),
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': LocationMatcher( PathToTestFile( 'test.js' ), 27, 3 )
     }
   } )
@@ -474,7 +473,7 @@ def Subcommands_GoToType_test( app ):
       'filepath': PathToTestFile( 'test.js' ),
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': LocationMatcher( PathToTestFile( 'test.js' ), 1, 7 )
     }
   } )
@@ -492,7 +491,7 @@ def Subcommands_FixIt_test( app ):
       'filepath': filepath,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'fixits': contains_inanyorder(
           has_entries( {
@@ -527,7 +526,7 @@ def Subcommands_OrganizeImports_test( app ):
       'filepath': filepath,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'fixits': contains( has_entries( {
           'chunks': contains(
@@ -563,7 +562,7 @@ def Subcommands_RefactorRename_Missing_test( app ):
       'filepath': PathToTestFile( 'test.js' ),
     },
     'expect': {
-      'response': requests.codes.internal_server_error,
+      'response': 500,
       'data': ErrorMatcher( ValueError,
                             'Please specify a new name to rename it to.\n'
                             'Usage: RefactorRename <new name>' )
@@ -583,7 +582,7 @@ def Subcommands_RefactorRename_NotPossible_test( app ):
       'filepath': PathToTestFile( 'test.js' ),
     },
     'expect': {
-      'response': requests.codes.internal_server_error,
+      'response': 500,
       'data': ErrorMatcher( RuntimeError,
                             'Value cannot be renamed: '
                             'You cannot rename this element.' )
@@ -603,7 +602,7 @@ def Subcommands_RefactorRename_Simple_test( app ):
       'filepath': PathToTestFile( 'test.js' ),
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'fixits': contains( has_entries( {
           'chunks': contains_inanyorder(
@@ -635,7 +634,7 @@ def Subcommands_RefactorRename_MultipleFiles_test( app ):
       'filepath': PathToTestFile( 'test.js' ),
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'fixits': contains( has_entries( {
           'chunks': contains_inanyorder(

@@ -34,7 +34,6 @@ from hamcrest import ( assert_that,
                        matches_regexp )
 from nose.tools import eq_
 from pprint import pformat
-import requests
 import json
 
 from ycmd.utils import ReadFile
@@ -104,7 +103,7 @@ def Subcommands_ServerNotReady_test():
         'arguments': arguments,
       },
       'expect': {
-        'response': requests.codes.internal_server_error,
+        'response': 500,
         'data': ErrorMatcher( RuntimeError,
                               'Server is initializing. Please wait.' ),
       }
@@ -189,7 +188,7 @@ def Subcommands_GetDoc_NoDoc_test( app ):
                             event_data,
                             expect_errors = True )
 
-  eq_( response.status_code, requests.codes.internal_server_error )
+  eq_( response.status_code, 500 )
 
   assert_that( response.json,
                ErrorMatcher( RuntimeError, NO_DOCUMENTATION_MESSAGE ) )
@@ -270,7 +269,7 @@ def Subcommands_GetType_NoKnownType_test( app ):
                             event_data,
                             expect_errors = True )
 
-  eq_( response.status_code, requests.codes.internal_server_error )
+  eq_( response.status_code, 500 )
 
   assert_that( response.json,
                ErrorMatcher( RuntimeError, 'Unknown type' ) )
@@ -481,7 +480,7 @@ def Subcommands_GetType_LiteralValue_test( app ):
                             event_data,
                             expect_errors = True )
 
-  eq_( response.status_code, requests.codes.internal_server_error )
+  eq_( response.status_code, 500 )
 
   assert_that( response.json,
                ErrorMatcher( RuntimeError, 'Unknown type' ) )
@@ -509,7 +508,7 @@ def Subcommands_GoTo_NoLocation_test( app ):
                             event_data,
                             expect_errors = True )
 
-  eq_( response.status_code, requests.codes.internal_server_error )
+  eq_( response.status_code, 500 )
 
   assert_that( response.json,
                ErrorMatcher( RuntimeError, 'Cannot jump to location' ) )
@@ -537,7 +536,7 @@ def Subcommands_GoToReferences_NoReferences_test( app ):
                             event_data,
                             expect_errors = True )
 
-  eq_( response.status_code, requests.codes.internal_server_error )
+  eq_( response.status_code, 500 )
 
   assert_that( response.json,
                ErrorMatcher( RuntimeError,
@@ -605,7 +604,7 @@ def Subcommands_RefactorRename_Simple_test( app ):
       'column_num': 5,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'fixits': contains( has_entries( {
           'chunks': contains(
@@ -660,7 +659,7 @@ def Subcommands_RefactorRename_MultipleFiles_test( app ):
       'column_num': 13,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'fixits': contains( has_entries( {
           'chunks': contains(
@@ -705,7 +704,7 @@ def Subcommands_RefactorRename_Missing_New_Name_test( app ):
       'filepath': filepath,
     },
     'expect': {
-      'response': requests.codes.internal_server_error,
+      'response': 500,
       'data': ErrorMatcher( ValueError,
                             'Please specify a new name to rename it to.\n'
                             'Usage: RefactorRename <new name>' ),
@@ -731,7 +730,7 @@ def Subcommands_RefactorRename_Unicode_test( app ):
       'filepath': filepath,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'fixits': contains( has_entries( {
           'chunks': contains(
@@ -765,7 +764,7 @@ def RunFixItTest( app, description, filepath, line, col, fixits_for_line ):
       'filepath': filepath,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': fixits_for_line,
     }
   } )
@@ -1106,7 +1105,7 @@ def Subcommands_FixIt_InvalidURI_test( app ):
         'filepath': filepath,
       },
       'expect': {
-        'response': requests.codes.ok,
+        'response': 200,
         'data': fixits,
       }
     } )
@@ -1132,7 +1131,7 @@ def Subcommands_Format_WholeFile_Spaces_test( app ):
       }
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'fixits': contains( has_entries( {
           'chunks': contains(
@@ -1223,7 +1222,7 @@ def Subcommands_Format_WholeFile_Tabs_test( app ):
       }
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'fixits': contains( has_entries( {
           'chunks': contains(
@@ -1324,7 +1323,7 @@ def Subcommands_Format_Range_Spaces_test( app ):
       }
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'fixits': contains( has_entries( {
           'chunks': contains(
@@ -1383,7 +1382,7 @@ def Subcommands_Format_Range_Tabs_test( app ):
       }
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'fixits': contains( has_entries( {
           'chunks': contains(
@@ -1424,7 +1423,7 @@ def RunGoToTest( app, description, filepath, line, col, cmd, goto_response ):
       'filepath': filepath
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': goto_response,
     }
   } )
@@ -1514,7 +1513,7 @@ def Subcommands_OrganizeImports_test( app ):
       'filepath': filepath
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'fixits': contains( has_entries( {
           'chunks': contains(
@@ -1558,7 +1557,7 @@ def Subcommands_RequestTimeout_test( app ):
         'filepath': filepath,
       },
       'expect': {
-        'response': requests.codes.internal_server_error,
+        'response': 500,
         'data': ErrorMatcher( ResponseTimeoutException, 'Response Timeout' )
       }
     } )
@@ -1595,7 +1594,7 @@ def Subcommands_RequestFailed_test( app ):
         'filepath': filepath,
       },
       'expect': {
-        'response': requests.codes.internal_server_error,
+        'response': 500,
         'data': ErrorMatcher( ResponseFailedException )
       }
     } )
@@ -1619,7 +1618,7 @@ def Subcommands_IndexOutOfRange_test( app ):
       'filepath': filepath,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( { 'fixits': empty() } ),
     }
   } )
@@ -1669,7 +1668,7 @@ def Subcommands_DifferentFileTypesUpdate_test( app ):
       }
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( { 'fixits': empty() } ),
     }
   } )
@@ -1693,7 +1692,7 @@ def Subcommands_ExtraConf_SettingsValid_test( app ):
       'column_num': 7,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'fixits': contains( has_entries( {
           'chunks': empty(),
@@ -1726,7 +1725,7 @@ def Subcommands_ExtraConf_SettingsValid_UnknownExtraConf_test( app ):
   print( 'FileReadyToParse result: {}'.format( json.dumps( response.json,
                                                            indent = 2 ) ) )
 
-  eq_( response.status_code, requests.codes.internal_server_error )
+  eq_( response.status_code, 500 )
   assert_that( response.json, ErrorMatcher( UnknownExtraConf ) )
 
   app.post_json(
@@ -1744,7 +1743,7 @@ def Subcommands_ExtraConf_SettingsValid_UnknownExtraConf_test( app ):
       'column_num': 7,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'fixits': contains( has_entries( {
           # Just prove that we actually got a reasonable result

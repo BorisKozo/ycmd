@@ -22,7 +22,6 @@ from __future__ import absolute_import
 # Not installing aliases from python-future; it's unreliable and slow.
 from builtins import *  # noqa
 
-import requests
 from base64 import b64decode, b64encode
 from bottle import request, abort
 from ycmd import hmac_utils
@@ -55,7 +54,7 @@ class HmacPlugin( object ):
     def wrapper( *args, **kwargs ):
       if not HostHeaderCorrect( request ):
         LOGGER.info( 'Dropping request with bad Host header' )
-        abort( requests.codes.unauthorized,
+        abort( 401,
                'Unauthorized, received bad Host header.' )
         return
 
@@ -63,7 +62,7 @@ class HmacPlugin( object ):
       if not RequestAuthenticated( request.method, request.path, body,
                                    self._hmac_secret ):
         LOGGER.info( 'Dropping request with bad HMAC' )
-        abort( requests.codes.unauthorized, 'Unauthorized, received bad HMAC.' )
+        abort( 401, 'Unauthorized, received bad HMAC.' )
         return
       body = callback( *args, **kwargs )
       SetHmacHeader( body, self._hmac_secret )

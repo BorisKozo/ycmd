@@ -26,7 +26,6 @@ from hamcrest import assert_that, contains, has_entries, has_entry
 from mock import patch
 from nose.tools import eq_
 from pprint import pformat
-import requests
 
 from ycmd.tests.go import IsolatedYcmd, PathToTestFile, SharedYcmd
 from ycmd.tests.test_utils import ( BuildRequest,
@@ -83,7 +82,7 @@ def Subcommands_GoTo_Basic( app, goto_command ):
       'filepath': PathToTestFile( 'goto.go' ),
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'filepath': PathToTestFile( 'goto.go' ),
         'line_num': 3,
@@ -109,7 +108,7 @@ def Subcommands_GoTo_Keyword( app, goto_command ):
       'filepath': PathToTestFile( 'goto.go' ),
     },
     'expect': {
-      'response': requests.codes.internal_server_error,
+      'response': 500,
       'data': ErrorMatcher( RuntimeError, 'Can\'t find a definition.' )
     }
   } )
@@ -131,7 +130,7 @@ def Subcommands_GoTo_WindowsNewlines( app, goto_command ):
       'filepath': PathToTestFile( 'win.go' ),
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'filepath': PathToTestFile( 'win.go' ),
         'line_num': 2,

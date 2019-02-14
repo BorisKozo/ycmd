@@ -32,7 +32,6 @@ from hamcrest import ( assert_that,
                        matches_regexp )
 from nose.tools import eq_
 import pprint
-import requests
 
 from ycmd.tests.javascript import PathToTestFile, SharedYcmd
 from ycmd.tests.test_utils import ( BuildRequest, ChunkMatcher,
@@ -83,7 +82,7 @@ def GetCompletions_Basic_test( app ):
       'filepath': PathToTestFile( 'test.js' )
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': contains_inanyorder(
           CompletionEntryMatcher(
@@ -127,7 +126,7 @@ def GetCompletions_Keyword_test( app ):
       'filepath': PathToTestFile( 'test.js' ),
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': has_item( {
           'insertion_text': 'class',
@@ -151,7 +150,7 @@ def GetCompletions_AutoImport_test( app ):
       'filepath': filepath,
     },
     'expect': {
-      'response': requests.codes.ok,
+      'response': 200,
       'data': has_entries( {
         'completions': has_item( has_entries( {
           'insertion_text':  'Bår',

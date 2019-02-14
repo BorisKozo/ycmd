@@ -26,7 +26,6 @@ from builtins import *  # noqa
 import functools
 import os
 import psutil
-import requests
 import time
 
 from mock import patch
@@ -302,7 +301,7 @@ def ServerManagement_OpenProject_RelativePathNoWD_test( app ):
     expect_errors = True,
   )
   assert_that( response.status_code,
-               equal_to( requests.codes.internal_server_error ) )
+               equal_to( 500 ) )
   assert_that( response.json,
                ErrorMatcher( ValueError,
                              'Project directory must be absolute' ) )
@@ -321,7 +320,7 @@ def ServerManagement_OpenProject_RelativePathNoPath_test( app ):
     expect_errors = True,
   )
   assert_that( response.status_code,
-               equal_to( requests.codes.internal_server_error ) )
+               equal_to( 500 ) )
   assert_that( response.json,
                ErrorMatcher( ValueError,
                              'Usage: OpenProject <project directory>' ) )
