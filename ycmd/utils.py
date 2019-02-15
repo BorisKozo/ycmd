@@ -35,11 +35,13 @@ import sys
 import tempfile
 import time
 import threading
+import urllib3
 
 LOGGER = logging.getLogger( 'ycmd' )
 ROOT_DIR = os.path.normpath( os.path.join( os.path.dirname( __file__ ), '..' ) )
 DIR_OF_THIRD_PARTY = os.path.join( ROOT_DIR, 'third_party' )
 LIBCLANG_DIR = os.path.join( DIR_OF_THIRD_PARTY, 'clang', 'lib' )
+POOL_MANAGER = urllib3.PoolManager()
 
 
 # Idiom to import pathname2url, url2pathname, urljoin, and urlparse on Python 2

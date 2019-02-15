@@ -32,7 +32,7 @@ from subprocess import PIPE
 from ycmd import utils, responses
 from ycmd.completers.completer import Completer
 from ycmd.completers.completer_utils import GetFileLines
-from ycmd.utils import LOGGER
+from ycmd.utils import LOGGER, POOL_MANAGER
 
 PATH_TO_TERN_BINARY = os.path.abspath(
   os.path.join(
@@ -294,7 +294,7 @@ class TernCompleter( Completer ):
 
     try:
       target = self._GetServerAddress() + '/ping'
-      response = urllib3.PoolManager().request( 'GET', target )
+      response = POOL_MANAGER.request( 'GET', target )
       return response.status_code == 200
     except urllib3.exceptions.ConnectionError:
       return False
@@ -329,9 +329,9 @@ class TernCompleter( Completer ):
     }
     full_request.update( request )
 
-    response = urllib3.PoolManager().request( 'POST',
-                                              self._GetServerAddress(),
-                                              json = full_request )
+    response = POOL_MANAGER.request( 'POST',
+                                     self._GetServerAddress(),
+                                     json = full_request )
 
     if response.status_code != 200:
       raise RuntimeError( response.text )

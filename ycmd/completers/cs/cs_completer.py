@@ -566,10 +566,10 @@ class CsharpSolutionCompleter( object ):
   def _GetResponse( self, handler, parameters = {}, timeout = None ):
     """ Handle communication with server """
     target = urljoin( self._ServerLocation(), handler )
-    response = urllib3.PoolManager().request( 'POST',
-                                              target,
-                                              fields = parameters,
-                                              timeout = timeout )
+    response = utils.POOL_MANAGER.request( 'POST',
+                                           target,
+                                           fields = parameters,
+                                           timeout = timeout )
     return response.json()
 
 

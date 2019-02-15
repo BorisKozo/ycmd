@@ -23,7 +23,7 @@ from __future__ import absolute_import
 from builtins import *  # noqa
 
 from base64 import b64decode, b64encode
-from future.utils import native
+from future.utils import PY2, native
 from hamcrest import assert_that, empty, equal_to, is_in
 from tempfile import NamedTemporaryFile
 import functools
@@ -42,7 +42,7 @@ from ycmd.user_options_store import DefaultOptions
 from ycmd.utils import ( CloseStandardStreams, CreateLogfile,
                          GetUnusedLocalhostPort, ReadFile, RemoveIfExists,
                          SafePopen, SetEnviron, ToBytes, ToUnicode, urljoin,
-                         urlparse )
+                         urlparse, POOL_MANAGER )
 
 HEADERS = { 'content-type': 'application/json' }
 HMAC_HEADER = 'x-ycm-hmac'
@@ -212,11 +212,12 @@ class Client_test( object ):
     headers = self._ExtraHeaders( method,
                                   request_uri,
                                   data )
-    response = urllib3.PoolManager().request( method,
-                                              request_uri,
-                                              headers = headers,
-                                              data = data,
-                                              params = params )
+    if not PY2:
+      request_uri = ToUnicode( request_uri )
+    response = POOL_MANAGER.request( method,
+                                     request_uri,
+                                     headers = headers,
+                                     fields = data if data else params )
     return response
 
 

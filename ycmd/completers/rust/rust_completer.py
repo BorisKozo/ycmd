@@ -27,6 +27,8 @@ from ycmd.completers.completer import Completer
 from ycmd.utils import ( ExpandVariablesInPath,
                          FindExecutable,
                          LOGGER,
+                         POOL_MANAGER,
+                         PY2,
                          ProcessIsRunning,
                          ToUnicode,
                          ToBytes,
@@ -34,7 +36,7 @@ from ycmd.utils import ( ExpandVariablesInPath,
                          urljoin )
 
 from future.utils import iteritems, native
-import requests
+import urllib3
 import json
 import tempfile
 import base64
@@ -195,14 +197,16 @@ class RustCompleter( Completer ):
     # Failing to wrap the method & url bytes objects in `native()` causes HMAC
     # failures (403 Forbidden from racerd) for unknown reasons. Similar for
     # request_hmac above.
-    response = requests.request( native( method ),
-                                 native( url ),
-                                 data = body,
-                                 headers = extra_headers )
+    if not PY2:
+      url = ToUnicode( url )
+    response = POOL_MANAGER.request( native( method ),
+                                     native( url ),
+                                     fields = body,
+                                     headers = extra_headers )
 
     response.raise_for_status()
 
-    if response.status_code == requests.codes.no_content:
+    if response.status_code == 201:
       return None
 
     return response.json()
@@ -267,7 +271,7 @@ class RustCompleter( Completer ):
   def ComputeCandidatesInner( self, request_data ):
     try:
       completions = self._FetchCompletions( request_data )
-    except requests.HTTPError:
+    except urllib3.exceptions.HTTPError:
       if not self._rust_source_path:
         raise RuntimeError( ERROR_FROM_RACERD_MESSAGE )
       raise
@@ -348,7 +352,7 @@ class RustCompleter( Completer ):
     # Do NOT make this except clause more generic! If you need to catch more
     # exception types, list them all out. Having `Exception` here caused FORTY
     # HOURS OF DEBUGGING.
-    except requests.exceptions.ConnectionError:
+    except urllib3.exceptions.ConnectionError:
       LOGGER.exception( 'Failed to connect to racerd' )
       return False
 
