@@ -459,6 +459,7 @@ def ImportAndCheckCore_Compatible_test( logger ):
   assert_that( logger.method_calls, empty() )
 
 
+@pytest.mark.valgrind_skip
 def ImportAndCheckCore_Unexpected_test():
   RunImportAndCheckCoreException( {
     'exception_message': 'unexpected import exception',
@@ -467,6 +468,7 @@ def ImportAndCheckCore_Unexpected_test():
   } )
 
 
+@pytest.mark.valgrind_skip
 def ImportAndCheckCore_Missing_test():
   RunImportAndCheckCoreException( {
     'exception_message': "No module named 'ycm_core'",
